@@ -45,11 +45,12 @@ body {
   font-size: 2.4rem;
   line-height: 3.2rem;
   letter-spacing: 0;
-  font-weight: 300;
-  color: #212121;
+  font-weight: 500;
   text-transform: inherit;
   margin-bottom: 1rem;
+  color: #990000;
   text-align: center;
+  padding-bottom: 50px;
 }
 #demo h2 {
   font-size: 1.5rem;

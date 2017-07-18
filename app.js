@@ -3,7 +3,11 @@ var bodyParser = require("body-parser");
 var app = express();
 var request = require("request");
 var current_order = 0;
-
+var orders = [ { id: 1,
+    cafe: '1',
+    name: 'tobias',
+    note: 'Test Burger please ignore',
+    time: 1500411637.257 } ];
 var options = {
     method: 'GET',
     url: 'http://legacy.cafebonappetit.com/api/2/menus',
