@@ -1,0 +1,86 @@
+doctype html
+html
+  head
+    meta(charset='UTF-8')
+    title Material Design - Responsive Table
+    script(src='https://s.codepen.io/assets/libs/modernizr.js', type='text/javascript')
+    link(rel='stylesheet', href='https://cdnjs.cloudflare.com/ajax/libs/normalize/5.0.0/normalize.min.css')
+    link(rel='stylesheet', href='css/style.css')
+  body
+    #demo
+      h1 Material Design Responsive Table
+      h2 Table of my other Material Design works (list was updated 08.2015)
+      // Responsive table starts here
+      // For correct display on small screens you must add 'data-title' to each 'td' in your table
+      .table-responsive-vertical.shadow-z-1
+        // Table starts here
+        table#table.table.table-hover.table-mc-light-blue
+          thead
+            tr
+              th ID
+              th Name
+              th Link
+              th Status
+          tbody
+            tr
+              each val in ['1', 'super cool font', 'a-link-that-works.com', 'idk-status']
+                td=val
+            tr
+              td(data-title='ID') 2
+              td(data-title='Name') Material Design Iconic Font
+              td(data-title='Link')
+                a(href='https://codepen.io/zavoloklom/pen/uqCsB', target='_blank') Codepen
+                a(href='https://github.com/zavoloklom/material-design-iconic-font', target='_blank') GitHub
+              td(data-title='Status') Completed
+            tr
+              td(data-title='ID') 3
+              td(data-title='Name') Material Design Hierarchical Display
+              td(data-title='Link')
+                a(href='https://codepen.io/zavoloklom/pen/eNaEBM', target='_blank') Codepen
+                a(href='https://github.com/zavoloklom/material-design-hierarchical-display', target='_blank') GitHub
+              td(data-title='Status') Completed
+            tr
+              td(data-title='ID') 4
+              td(data-title='Name') Material Design Sidebar
+              td(data-title='Link')
+                a(href='https://codepen.io/zavoloklom/pen/dIgco', target='_blank') Codepen
+              td(data-title='Status') Completed
+            tr
+              td(data-title='ID') 5
+              td(data-title='Name') Material Design Tiles
+              td(data-title='Link')
+                a(href='https://codepen.io/zavoloklom/pen/wtApI', target='_blank') Codepen
+              td(data-title='Status') Completed
+            tr
+              td(data-title='ID') 6
+              td(data-title='Name') Material Design Typography
+              td(data-title='Link')
+                a(href='https://codepen.io/zavoloklom/pen/IkaFL', target='_blank') Codepen
+                a(href='https://github.com/zavoloklom/material-design-typography', target='_blank') GitHub
+              td(data-title='Status') Completed
+            tr
+              td(data-title='ID') 7
+              td(data-title='Name') Material Design Buttons
+              td(data-title='Link')
+                a(href='https://codepen.io/zavoloklom/pen/Gubja', target='_blank') Codepen
+              td(data-title='Status') In progress
+            tr
+              td(data-title='ID') 8
+              td(data-title='Name') Material Design Form Elements
+              td(data-title='Link')
+                a(href='https://codepen.io/zavoloklom/pen/yaozl', target='_blank') Codepen
+              td(data-title='Status') In progress
+            tr
+              td(data-title='ID') 9
+              td(data-title='Name') Material Design Email Template
+              td(data-title='Link')
+                a(href='https://codepen.io/zavoloklom/pen/qEVqzx', target='_blank') Codepen
+              td(data-title='Status') Completed
+            tr
+              td(data-title='ID') 10
+              td(data-title='Name') Material Design Animation Timing (old one)
+              td(data-title='Link')
+                a(href='https://codepen.io/zavoloklom/pen/Jbrho', target='_blank') Codepen
+              td(data-title='Status') Completed
+    script(src='http://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js')
+    script(src='js/index.js')

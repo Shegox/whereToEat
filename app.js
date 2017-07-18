@@ -13,6 +13,12 @@ var cafes = {1: 246, 3: 245, 8: 247};
 var cafe = {1: [], 3: [], 8: []};
 var search_index = [];
 
+app.get('/orders', function (req, res) {
+    // res.sendFile(`/Users/i862025/whereToEat/index.html`);
+    // let cafe_num = req.query.cafe;
+    res.render('index', { title: 'Hey', message: 'Hello there'})
+})
+
 request(options, function (error, response, body) {
     if (error) throw new Error(error);
     var data = JSON.parse(body);
@@ -20,7 +26,7 @@ request(options, function (error, response, body) {
 
     for (var building_nr in cafes) {
         var cafe_data = data.days[0].cafes[cafes[building_nr]].dayparts[0];
-        console.log(cafe_data);
+        // console.log(cafe_data);
         for (var daypart in cafe_data) {
             var meal_type = cafe_data[daypart].label;
             cafe[building_nr][meal_type] = [];
@@ -33,18 +39,23 @@ request(options, function (error, response, body) {
                     search_index.push({"item": item, "cafe": building_nr, "meal_type": meal_type});
 
                     if (item.tier == 1) {
-                        console.log(item);
+                        // console.log(item);
                         cafe[building_nr][meal_type].push(item);
                     }
                 }
             }
         }
     }
-    console.log(search_index);
+    // console.log(search_index);
 });
 
 app.use(bodyParser.urlencoded({extended: false}));
 app.use(bodyParser.json());
+
+app.use(express.static('/Users/i862025/whereToEat/views'));
+
+app.set('views', './views')
+app.set('view engine', 'pug')
 
 app.listen(3000, function () {
 });
@@ -56,9 +67,9 @@ app.post('/cafe', function (req, res) {
     parts = req.body.text.split("-");
     cafe_options = parts[1];
     building_nr = parts[0].trim();
-    console.log(cafe_options);
+    // console.log(cafe_options);
     if (building_nr == 1 || building_nr == 3 || building_nr == 8) {
-        console.log(parts);
+        // console.log(parts);
         var mes = {"attachments": []};
         for (var meal_type in cafe[building_nr]) {
             var att = undefined;
@@ -139,7 +150,7 @@ app.post('/wheretoeat', function (req, res) {
                 }
             }
         }
-        console.log(hit_cafes);
+        // console.log(hit_cafes);
         if (Object.keys(hit_cafes).length !== 0) {
             var mes = {"attachments": []};
             for (var cafe in hit_cafes) {
