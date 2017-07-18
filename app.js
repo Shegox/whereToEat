@@ -18,7 +18,8 @@ var search_index = [];
 app.get('/orders', function (req, res) {
     // res.sendFile(`/Users/i862025/whereToEat/index.html`);
     // let cafe_num = req.query.cafe;
-    res.render('index', { title: 'Hey', message: 'Hello there'})
+    console.log(orders);
+    res.render('index', { orders: orders })
 })
 
 request(options, function (error, response, body) {
