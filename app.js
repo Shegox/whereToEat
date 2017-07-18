@@ -1,7 +1,6 @@
 var express = require("express");
 var bodyParser = require("body-parser");
 var app = express();
-
 var request = require("request");
 
 var options = {
@@ -16,10 +15,8 @@ var search_index = [];
 
 request(options, function (error, response, body) {
     if (error) throw new Error(error);
-    //  console.log(body);
     var data = JSON.parse(body);
     var items = data.items;
-    //      console.log(data.days[0].date);
 
     for (var building_nr in cafes) {
         var cafe_data = data.days[0].cafes[cafes[building_nr]].dayparts[0];
@@ -27,7 +24,6 @@ request(options, function (error, response, body) {
         for (var daypart in cafe_data) {
             var meal_type = cafe_data[daypart].label;
             cafe[building_nr][meal_type] = [];
-
 
             for (var i in cafe_data[daypart]["stations"]) {
                 var station = cafe_data[daypart]["stations"][i];
@@ -44,9 +40,7 @@ request(options, function (error, response, body) {
             }
         }
     }
-
     console.log(search_index);
-
 });
 
 app.use(bodyParser.urlencoded({extended: false}));
@@ -65,8 +59,8 @@ app.post('/cafe', function (req, res) {
         var mes = {"attachments": []};
         for (var meal_type in cafe[req.body.text]) {
             var att = {
-                "color": "",
-                "author_name": "Cafe " + req.body.text,
+                "color": ((meal_type == "Breakfast") ? "E4981E" : "1DC47C"),
+                "author_name": "Café " + req.body.text,
                 "title": meal_type,
                 "title_link": "http://sap.cafebonappetit.com/cafe/cafe-" + req.body.text + "/#panel-daypart-menu-" + ((meal_type == "Breakfast") ? "1" : "2"),
                 "fields": []
@@ -75,17 +69,13 @@ app.post('/cafe', function (req, res) {
             for (var i in cafe[req.body.text][meal_type]) {
                 var meal = cafe[req.body.text][meal_type][i];
                 att.fields.push({
-                    "title": meal.label,
+                    "title": meal.label + ((meal.price != "")? " ("+meal.price+")":""),
                     "value": meal.description.replace(/<br \/>/g, "\n"),
                     "short": false
                 });
             }
             mes.attachments.push(att);
         }
-
-        res.setHeader('Content-Type', 'application/json');
-
-        res.send(JSON.stringify(mes));
     }
     else {
         var mes = {
@@ -94,57 +84,60 @@ app.post('/cafe', function (req, res) {
         };
     }
     res.setHeader('Content-Type', 'application/json');
-
     res.send(JSON.stringify(mes));
-    //  console.log(req.body.text);
 });
 
 app.post('/wheretoeat', function (req, res) {
-    var hit_cafes = {};
-    for (var i in search_index) {
-        var entry = search_index[i];
-        if (entry.item.label.toLowerCase().includes(req.body.text.toLowerCase()) || entry.item.description.toLowerCase().includes(req.body.text.toLowerCase())) {
-            hit_cafes[entry.cafe] = hit_cafes[entry.cafe] || [];
-            hit_cafes[entry.cafe][entry.meal_type] = hit_cafes[entry.cafe][entry.meal_type] || [];
-            hit_cafes[entry.cafe][entry.meal_type].push(entry.item);
-        }
-    }
-    console.log(hit_cafes);
-    if (Object.keys(hit_cafes).length !== 0) {
-        var mes = {"attachments": []};
-        for (var cafe in hit_cafes) {
-            for (var meal_type in hit_cafes[cafe]) {
-                var att = {
-                    "color": "",
-                    "author_name": "Cafe " + cafe,
-                    "title": meal_type,
-                    "title_link": "http://sap.cafebonappetit.com/cafe/cafe-" + cafe + "/#panel-daypart-menu-" + ((meal_type == "Breakfast") ? "1" : "2"),
-                    "fields": []
-                };
-                for (var item_index in hit_cafes[cafe][meal_type]) {
-                    var meal = hit_cafes[cafe][meal_type][item_index];
-                    att.fields.push({
-                        "title": meal.label,
-                        "value": meal.description.replace(/<br \/>/g, "\n"),
-                        "short": false
-                    });
-
-                }
-                mes.attachments.push(att);
+    if (req.body.text.length >= 3) {
+        var hit_cafes = {};
+        for (var i in search_index) {
+            var entry = search_index[i];
+            if (entry.item.label.toLowerCase().includes(req.body.text.toLowerCase()) || entry.item.description.toLowerCase().includes(req.body.text.toLowerCase())) {
+                hit_cafes[entry.cafe] = hit_cafes[entry.cafe] || [];
+                hit_cafes[entry.cafe][entry.meal_type] = hit_cafes[entry.cafe][entry.meal_type] || [];
+                hit_cafes[entry.cafe][entry.meal_type].push(entry.item);
             }
         }
+        console.log(hit_cafes);
+        if (Object.keys(hit_cafes).length !== 0) {
+            var mes = {"attachments": []};
+            for (var cafe in hit_cafes) {
+                for (var meal_type in hit_cafes[cafe]) {
+                    var att = {
+                        "color": ((meal_type == "Breakfast") ? "E4981E" : "1DC47C"),
+                        "author_name": "Café " + cafe,
+                        "title": meal_type,
+                        "title_link": "http://sap.cafebonappetit.com/cafe/cafe-" + cafe + "/#panel-daypart-menu-" + ((meal_type == "Breakfast") ? "1" : "2"),
+                        "fields": []
+                    };
+                    for (var item_index in hit_cafes[cafe][meal_type]) {
+                        var meal = hit_cafes[cafe][meal_type][item_index];
+                        att.fields.push({
+                            "title": meal.label + ((meal.price != "")? " ("+meal.price+")":""),
+                            "value": meal.description.replace(/<br \/>/g, "\n"),
+                            "short": false
+                        });
+                    }
+                    mes.attachments.push(att);
+                }
+            }
 
-
+        }
+        else {
+            var mes = {
+                "response_type": "ephemeral",
+                "text": "Sorry, but it seems that " + req.body.text + " is not served today."
+            };
+        }
     }
     else {
         var mes = {
             "response_type": "ephemeral",
-            "text": "Sorry, but it seems that " + req.body.text + " is not served today."
+            "text": "Please use at least 3 characters as search string."
         };
     }
 
     res.setHeader('Content-Type', 'application/json');
-
     res.send(JSON.stringify(mes));
 });
 
