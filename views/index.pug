@@ -23,11 +23,13 @@ html
               th Note
               th Time
           tbody
-            - var orders= orders
-            each val in orders
+            each obj in orders
               tr
-              each field in val
-               td=field
+                td=obj.id
+                td=obj.cafe
+                td=obj.name
+                td=obj.note
+                td=obj.time
            
     script(src='http://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js')
     script(src='js/index.js')

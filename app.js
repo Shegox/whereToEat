@@ -2,7 +2,6 @@ var express = require("express");
 var bodyParser = require("body-parser");
 var app = express();
 var request = require("request");
-var orders = [];
 var current_order = 0;
 
 var options = {
@@ -15,11 +14,11 @@ var cafes = {1: 246, 3: 245, 8: 247};
 var cafe = {1: [], 3: [], 8: []};
 var search_index = [];
 
+
 app.get('/orders', function (req, res) {
-    // res.sendFile(`/Users/i862025/whereToEat/index.html`);
     // let cafe_num = req.query.cafe;
     console.log(orders);
-    res.render('index', { orders: orders })
+    res.render('index', { orders: orders });
 })
 
 request(options, function (error, response, body) {
