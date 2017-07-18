@@ -61,34 +61,51 @@ app.post('/cafe', function (req, res) {
         console.log(parts);
         var mes = {"attachments": []};
         for (var meal_type in cafe[building_nr]) {
-            var att = {
-                "color": ((meal_type == "Breakfast") ? "E4981E" : "1DC47C"),
-                "author_name": "Café " + building_nr,
-                "title": meal_type,
-                "title_link": "http://sap.cafebonappetit.com/cafe/cafe-" + building_nr + "/#panel-daypart-menu-" + ((meal_type == "Breakfast") ? "1" : "2"),
-                "fields": []
-            };
-
+            var att = undefined;
             for (var i in cafe[building_nr][meal_type]) {
 
                 var meal = cafe[building_nr][meal_type][i];
 
                 if (cafe_options !== undefined) {
                     if (food_options[cafe_options] in meal.cor_icon) {
+                        var att = att || {
+                                "color": ((meal_type == "Breakfast") ? "E4981E" : "1DC47C"),
+                                "author_name": "Café " + building_nr,
+                                "title": meal_type,
+                                "title_link": "http://sap.cafebonappetit.com/cafe/cafe-" + building_nr + "/#panel-daypart-menu-" + ((meal_type == "Breakfast") ? "1" : "2"),
+                                "fields": []
+                            };
                         att.fields.push(renderField(meal));
                     }
                 }
                 else {
+                    var att = att || {
+                            "color": ((meal_type == "Breakfast") ? "E4981E" : "1DC47C"),
+                            "author_name": "Café " + building_nr,
+                            "title": meal_type,
+                            "title_link": "http://sap.cafebonappetit.com/cafe/cafe-" + building_nr + "/#panel-daypart-menu-" + ((meal_type == "Breakfast") ? "1" : "2"),
+                            "fields": []
+                        };
                     att.fields.push(renderField(meal));
                 }
             }
-            mes.attachments.push(att);
+            if (att !== undefined) {
+
+                mes.attachments.push(att);
+            }
         }
     }
     else {
         var mes = {
             "response_type": "ephemeral",
-            "text": "Sorry couldn't find your cafe! Please use `/cafe 1`, `/cafe 3` or `/cafe 8`"
+            "text": "Sorry couldn't find your cafe! Please use `/cafe 1`, `/cafe 3` or `/cafe 8`."
+        };
+    }
+    console.log(mes.attachments);
+    if (mes.attachments.length == 0) {
+        var mes = {
+            "response_type": "ephemeral",
+            "text": "Sorry, no meal matches your query parameter in this cafe, please try another one."
         };
     }
     res.setHeader('Content-Type', 'application/json');
@@ -178,6 +195,4 @@ function renderField(meal) {
         "value": meal.description.replace(/<br \/>/g, "\n"),
         "short": false
     };
-
-
 }
