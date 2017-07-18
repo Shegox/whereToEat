@@ -3,7 +3,7 @@ var bodyParser = require("body-parser");
 var app = express();
 var request = require("request");
 var current_order = 0;
-
+var orders = [];
 var options = {
     method: 'GET',
     url: 'http://legacy.cafebonappetit.com/api/2/menus',
@@ -54,7 +54,7 @@ request(options, function (error, response, body) {
 app.use(bodyParser.urlencoded({extended: false}));
 app.use(bodyParser.json());
 
-app.use(express.static('/Users/i862025/whereToEat/views'));
+app.use(express.static('/whereToEat/views'));
 
 app.set('views', './views')
 app.set('view engine', 'pug')
@@ -135,12 +135,14 @@ app.post('/orderburger', function (req, res) {
         if (parts[1] !== undefined) {
             note = parts.slice(1).join(" ");
             console.log(note);
+			var date = new Date();
+			
             orders.push({
                 "id": current_order + 1,
                 "cafe": building_nr,
                 "name": username,
                 "note": note,
-                "time": (+new Date()) / 1000
+                "time": date.getHours() + ":" + date.getMinutes()
 
             });
             current_order++;

@@ -7,6 +7,10 @@
  * JS used only for table constructor: you don't need it in your project
  */
 
+ setTimeout(function(){
+   window.location.reload(1);
+}, 5000);
+ 
 $(document).ready(function() {
 
     var table = $('#table');
