@@ -2,6 +2,8 @@ var express = require("express");
 var bodyParser = require("body-parser");
 var app = express();
 var request = require("request");
+var orders = [];
+var current_order = 0;
 
 var options = {
     method: 'GET',
@@ -112,8 +114,61 @@ app.post('/cafe', function (req, res) {
     res.send(JSON.stringify(mes));
 });
 
-app.post('/wheretoeat', function (req, res) {
+app.post('/orderburger', function (req, res) {
+    parts = req.body.text.split(" ");
+    username = req.body.user_name;
 
+    building_nr = parts[0];
+
+    if (building_nr !== undefined && (building_nr == 1 || building_nr == 3 || building_nr == 8)) {
+        if (parts[1] !== undefined) {
+            note = parts.slice(1).join(" ");
+            console.log(note);
+            orders.push({
+                "id": current_order + 1,
+                "cafe": building_nr,
+                "name": username,
+                "note": note,
+                "time": (+new Date()) / 1000
+
+            });
+            current_order++;
+
+            var mes = {
+                "attachments": [
+                    {
+                        "color": "good",
+                        "author_name": "Café " + building_nr,
+                        "title": "Order confirmed (Nr. " + current_order + ")",
+                        "text": 'Your order (Nr. ' + current_order + ') for ' + username + ' of a burger with the note "' + note + '" has been confirmed and will be ready in about 10min.',
+                        "ts": (+new Date()) / 1000
+                    }
+                ]
+            }
+        }
+        else {
+            var mes = {
+                "response_type": "ephemeral",
+                "text": "Please add a note for the chef to specify the ingredients and wishes you have for your burger For example `/orderburger 1 Please with cheddar cheese and bacon`."
+            };
+        }
+
+
+    }
+    else {
+        var mes = {
+            "response_type": "ephemeral",
+            "text": "Please specifiy a valid cafe in which you are going (1, 3 or 8). For example `/orderburger 1 Please with cheese and bacon`."
+        };
+    }
+
+    console.log(orders);
+    res.setHeader('Content-Type', 'application/json');
+    res.send(JSON.stringify(mes));
+
+});
+
+app.post('/wheretoeat', function (req, res) {
     parts = req.body.text.split("-");
     cafe_options = parts[1];
     query = parts[0].trim();
