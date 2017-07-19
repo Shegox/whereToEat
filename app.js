@@ -4,11 +4,16 @@ var app = express();
 var request = require("request");
 var current_order = 0;
 var orders = [];
+const https = require('https');
+const fs = require('fs');
+var privateKey = fs.readFileSync( '/etc/letsencrypt/live/tobiasgabriel.de/privkey.pem' );
+var certificate = fs.readFileSync( '/etc/letsencrypt/live/tobiasgabriel.de/cert.pem' );
+var chain = fs.readFileSync( '/etc/letsencrypt/live/tobiasgabriel.de/fullchain.pem' );
 
 var options = {
     method: 'GET',
     url: 'http://legacy.cafebonappetit.com/api/2/menus',
-    qs: {cafe: '245,246,247'},
+    qs: {cafe: '245,246,247', date: '2017-07-19'},
     headers: {}
 };
 var cafes = {1: 246, 3: 245, 8: 247};
@@ -60,13 +65,16 @@ app.use(express.static('/whereToEat/views'));
 app.set('views', './views')
 app.set('view engine', 'pug')
 
-app.listen(3000, function () {
-});
+https.createServer({
+    key: privateKey,
+    cert: certificate,
+	ca: chain
+}, app).listen(3000);
 
 var food_options = {"vg": 4, "v": 1, "ng": 9}
 
 app.post('/cafe', function (req, res) {
-
+console.log(req);
     parts = req.body.text.split("-");
     cafe_options = parts[1];
     building_nr = parts[0].trim();
