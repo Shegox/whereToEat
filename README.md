@@ -15,7 +15,7 @@ This Slack Integration helps you decide where to eat and what's available in SAP
 
 # Add this to my slack team
 Just press the link below and add the integration to your team.
-https://wheretoeat-sap.slack.com/oauth/214710755093.396f906d9b5a3933075eb9d1317bd458a76e0d89e71e8b9592382059b9fff5e9
+https://slack.com/oauth/authorize?&client_id=215127220999.214921194070&scope=commands
 
 # Install the application on my server
 - installl nodejs and try to run the application. Install all needed dependencies
