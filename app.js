@@ -3,7 +3,6 @@ var bodyParser = require("body-parser");
 var app = express();
 var request = require("request");
 var current_order = 0;
-<<<<<<< HEAD
 var orders = [];
 
 var options = {
